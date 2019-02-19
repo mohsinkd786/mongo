@@ -375,4 +375,60 @@ db.ecommerce.aggregate([{
         }
 ]).pretty()
 
+59. Get all PRODUCTS with Price when price is greater than 50000
+	db.products.aggregate([
+    {
+        $lookup:{
+            from: "productCategories",
+            localField: "category",
+            foreignField: "_id",
+            as : "categories"
+        }
+    },
+    {
+        $unwind: "$categories"
+    },{
+        $project:{
+            name : 1,
+            price: {
+                $cond: {
+                    if: {
+                        $gte: ["$price",50000]
+                    },
+                    then: "$price",
+                    else : "$$REMOVE"
+                }
+            }
+        }
+    }
+]);
 
+60. Get all PRODUCTS categories in ascending order
+	db.products.aggregate([
+    {
+        $lookup:{
+            from: "productCategories",
+            localField: "category",
+            foreignField: "_id",
+            as : "categories"
+        }
+    },
+    {
+        $unwind: "$categories"
+    },
+    {
+        $replaceRoot :{ newRoot : "$categories"} 
+    },
+    {
+        $group:{
+            _id: "$name"
+        }
+    },
+    {
+        $sort: {
+            _id : 1
+        }
+    }
+]);
+
+61. 
