@@ -327,5 +327,52 @@ db.ecommerce.aggregate([{
         }
 ]).pretty()
 
+57. Unwind the Referenced Documents
+	db.products.aggregate([
+    {
+        $lookup:{
+            from: "productCategories",
+            localField: "category",
+            foreignField: "_id",
+            as : "categories"
+        }
+    },
+    {
+        $unwind: "$categories"
+    },
+    {
+        $group: {
+            _id:0,
+            "Total Cost": {$sum : "$price"}
+        }
+    }
+]);
+
+58. Get all Employees with salary less than the max salary
+db.ecommerce.aggregate([{
+        $unwind: "$employees" 
+        },
+        {
+            $group: {
+                _id: "$_id",
+                emps: { $push : "$$ROOT" }
+            }
+        },
+        {
+            $unwind: "$emps"
+        },
+        {
+            $project:{
+                salary : "$emps.employees.salary",
+                name: "$emps.employees.name"
+            }
+        },
+        {
+            $sort:{ salary: -1 }
+        },
+        {
+            $skip: 2
+        }
+]).pretty()
 
 
