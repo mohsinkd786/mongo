@@ -308,5 +308,24 @@ db.ecommerce.update({_id:2},
     }
 ]);
 
+56. Unwind the employees & filter by Salary
+db.ecommerce.aggregate([{
+        $unwind: "$employees" 
+        },
+        {
+            $match:{
+                "employees.salary":{ $lt:760000 }
+            }
+        },
+        {
+            $project:
+            {
+                "name":1,
+                "employees.name":1,
+                "employees.salary":1
+            }
+        }
+]).pretty()
+
 
 
