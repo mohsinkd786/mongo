@@ -396,7 +396,7 @@ db.ecommerce.aggregate([{
                         $gte: ["$price",50000]
                     },
                     then: "$price",
-                    else : "$$REMOVE"
+                    else : 0
                 }
             }
         }
@@ -431,4 +431,45 @@ db.ecommerce.aggregate([{
     }
 ]);
 
-61. 
+61. Get Custom Product Details
+	db.products.aggregate([
+    {
+        $lookup:{
+            from: "productCategories",
+            localField: "category",
+            foreignField: "_id",
+            as : "categories"
+        }
+    },
+    {
+        $unwind: "$categories"
+    },
+    {
+        $replaceRoot :{ newRoot :  {
+            ProductName : "$name",
+            Price: "$price",
+            category: "$categories.name",
+            catId: "$categories._id"
+        }
+        } 
+    }
+])
+
+62. Hide the child attributes for an Embedded Document
+db.ecommerce.aggregate([
+    {
+        $match :{}
+    },
+    {
+        $redact: {
+            {
+                $cond: {
+                    if: {
+                        $gte: ["$salary",750000] },
+                    then: "$$PRUNE",
+                    else : "$$DESCEND"
+                }
+            }
+        }
+    }
+])
