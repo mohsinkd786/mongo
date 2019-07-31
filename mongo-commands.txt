@@ -157,7 +157,10 @@ db.users.insert([{fname:"John",lname:"Stevens",email:"john@gmail.com",salary:100
 			mongod --auth --dbpath=data/
 
 			// access mongo client
+			// linux
 			mongo -u "admin" -p "123" --authenticationDatabase "admin"
+			// windows
+			mongo -u "admin" -p "123" --authenticationDatabase="admin"
 			
     Create Custom Role:
     		db.createRole({
