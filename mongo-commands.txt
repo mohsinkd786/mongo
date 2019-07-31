@@ -158,6 +158,16 @@ db.users.insert([{fname:"John",lname:"Stevens",email:"john@gmail.com",salary:100
 
 			// access mongo client
 			mongo -u "admin" -p "123" --authenticationDatabase "admin"
+			
+    Create Custom Role:
+    		db.createRole({
+		     role: "allowReadAccess",
+		     privileges: [
+		       { resource: { db: "admin", collection: "countries" }, actions: [ "find" ] }
+		     ],
+		     roles: []
+		   }
+		);
 
 51. Enable database user:
 		db.createUser({
@@ -167,6 +177,15 @@ db.users.insert([{fname:"John",lname:"Stevens",email:"john@gmail.com",salary:100
         		{role: "readWrite",db:"my-db"}
         	]});
 
+		db.createUser({
+		    user : "readUser",
+		    pwd : "123",
+		    roles : [
+			{
+			    role : "allowReadAccess", db : "admin"
+			}
+		    ]
+		});
         	// this use has limited access & cannot operate beyond that
 
 52. Manage relationships via:
@@ -190,7 +209,7 @@ db.users.insert([{fname:"John",lname:"Stevens",email:"john@gmail.com",salary:100
     }
 ]);
 
-// CReate PRODUCTS NOW
+// Create PRODUCTS NOW
 	db.products.insertMany([
     {
         _id: 1,
